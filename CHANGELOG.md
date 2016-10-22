@@ -1,6 +1,3 @@
-**Note:** `slog-*` sub-crates have their own ChangeLog files under
-corresponding `crates/*/` directory.
-
 # Change Log
 All notable changes to this project will be documented in this file.
 
@@ -10,19 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## 1.2.0 - [Unreleased]
 ### Changed
 
-* **BREAKING**: `Serializer` takes `key : &'static str` now
-* Fixed corner cases in `info!(...)` and other macros
+* **BREAKING**: Switched `AsyncStramer` to `slog_extra::Async`
 
-## 1.1.0
+## 1.1.0 - 2016-09-28
 ### Changed
 
-* **BREAKING**: Rewrite handling of owned values.
-
-## 1.0.1
-### Changed
-
-* Fix `use std` in `o!`
-* Implement `fmt::Debug` for `Logger`
+* **BREAKING**: `RecordDecorator` API has been changed to allow formatting
+  without any allocation.
 
 ## 1.0.0 - 2016-09-21
 
