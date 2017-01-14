@@ -23,6 +23,8 @@ pub trait Decorator: Send + Sync + Sized {
 }
 
 /// Per-record decorator
+// TODO 2.0: Make everything take `&mut self`.
+// TODO 2.0: Make everything take `f: &FnOnce`
 pub trait RecordDecorator {
     /// Format a field
     fn fmt_msg(&self, io: &mut io::Write, f: &Fn(&mut io::Write) -> io::Result<()>) -> io::Result<()> {
