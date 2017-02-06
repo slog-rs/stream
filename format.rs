@@ -19,7 +19,7 @@ pub trait Decorator: Send + Sync + Sized {
     type RecordDecorator: RecordDecorator;
 
     /// Get a `RecordDecorator` for a given `record`
-    fn decorate(&mut self, record: &Record) -> Self::RecordDecorator;
+    fn decorate(&self, record: &Record) -> Self::RecordDecorator;
 }
 
 /// Per-record decorator
