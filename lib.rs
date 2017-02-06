@@ -5,7 +5,6 @@
 //! using given `Format` and writes it to a given `io::Write`.
 #![warn(missing_docs)]
 
-#[macro_use]
 extern crate slog;
 extern crate slog_extra;
 extern crate thread_local;
@@ -19,7 +18,7 @@ use std::io;
 use slog::Record;
 
 use slog_extra::Async;
-use slog::OwnedKeyValueList;
+use slog::OwnedKVList;
 
 include!("format.rs");
 
@@ -49,7 +48,7 @@ impl<W: io::Write, F: Format> Streamer<W, F> {
 impl<W: 'static + io::Write + Send, F: Format + Send> Drain for Streamer<W, F> {
     type Error = io::Error;
 
-    fn log(&self, info: &Record, logger_values: &OwnedKeyValueList) -> io::Result<()> {
+    fn log(&self, info: &Record, logger_values: &OwnedKVList) -> io::Result<()> {
 
         TL_BUF.with(|buf| {
             let mut buf = buf.borrow_mut();
