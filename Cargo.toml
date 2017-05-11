@@ -8,7 +8,7 @@ license = "MPL-2.0"
 documentation = "https://docs.rs/slog-stream"
 homepage = "https://github.com/slog-rs/slog"
 repository = "https://github.com/slog-rs/stream"
-readme = "../../README.md"
+readme = "README.md"
 
 [lib]
 path = "lib.rs"
