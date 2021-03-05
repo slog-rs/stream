@@ -5,7 +5,7 @@ pub trait Format: Send + Sync + Sized {
     fn format(&self,
               io: &mut dyn io::Write,
               info: &Record,
-              logger_values: &OwnedKeyValueList)
+              logger_values: &OwnedKVList)
               -> io::Result<()>;
 }
 

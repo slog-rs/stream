@@ -5,7 +5,7 @@
 //! using given `Format` and writes it to a given `io::Write`.
 #![warn(missing_docs)]
 
-use slog::{Drain, DrainExt};
+use slog::Drain;
 
 use std::cell::RefCell;
 
@@ -13,8 +13,8 @@ use slog::Record;
 use std::io;
 use std::sync::Mutex;
 
-use slog::OwnedKeyValueList;
-use slog_extra::Async;
+use slog::OwnedKVList;
+use slog_async::Async;
 
 include!("format.rs");
 
@@ -42,9 +42,10 @@ impl<W: io::Write, F: Format> Streamer<W, F> {
 }
 
 impl<W: 'static + io::Write + Send, F: Format + Send> Drain for Streamer<W, F> {
-    type Error = io::Error;
+    type Ok = ();
+    type Err = io::Error;
 
-    fn log(&self, info: &Record, logger_values: &OwnedKeyValueList) -> io::Result<()> {
+    fn log(&self, info: &Record, logger_values: &OwnedKVList) -> io::Result<()> {
         TL_BUF.with(|buf| {
             let mut buf = buf.borrow_mut();
             let res = {
@@ -80,5 +81,5 @@ pub fn async_stream<W: io::Write + Send + 'static, F: Format + Send + 'static>(
     io: W,
     format: F,
 ) -> Async {
-    Async::new(Streamer::new(io, format).fuse())
+    Async::new(Streamer::new(io, format).fuse()).build()
 }
