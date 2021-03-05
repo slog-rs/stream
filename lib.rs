@@ -9,12 +9,12 @@ use slog::{Drain, DrainExt};
 
 use std::cell::RefCell;
 
-use std::sync::Mutex;
-use std::io;
 use slog::Record;
+use std::io;
+use std::sync::Mutex;
 
-use slog_extra::Async;
 use slog::OwnedKeyValueList;
+use slog_extra::Async;
 
 include!("format.rs");
 
@@ -45,14 +45,14 @@ impl<W: 'static + io::Write + Send, F: Format + Send> Drain for Streamer<W, F> {
     type Error = io::Error;
 
     fn log(&self, info: &Record, logger_values: &OwnedKeyValueList) -> io::Result<()> {
-
         TL_BUF.with(|buf| {
             let mut buf = buf.borrow_mut();
             let res = {
                 || {
                     self.format.format(&mut *buf, info, logger_values)?;
                     {
-                        let mut io = self.io
+                        let mut io = self
+                            .io
                             .lock()
                             .map_err(|_| io::Error::new(io::ErrorKind::Other, "lock error"))?;
                         io.write_all(&buf)?;
@@ -76,8 +76,9 @@ pub fn stream<W: io::Write + Send, F: Format>(io: W, format: F) -> Streamer<W, F
 /// Stream logging records to IO asynchronously
 ///
 /// Create `AsyncStreamer` drain
-pub fn async_stream<W: io::Write + Send + 'static, F: Format + Send + 'static>(io: W,
-                                                                               format: F)
-                                                                               -> Async {
+pub fn async_stream<W: io::Write + Send + 'static, F: Format + Send + 'static>(
+    io: W,
+    format: F,
+) -> Async {
     Async::new(Streamer::new(io, format).fuse())
 }
