@@ -3,9 +3,9 @@
 pub trait Format: Send + Sync + Sized {
     /// Format one logging record and write into `io`
     fn format(&self,
-              io: &mut io::Write,
+              io: &mut dyn io::Write,
               info: &Record,
-              logger_values: &OwnedKeyValueList)
+              logger_values: &OwnedKVList)
               -> io::Result<()>;
 }
 
@@ -27,27 +27,27 @@ pub trait Decorator: Send + Sync + Sized {
 // TODO 2.0: Make everything take `f: &FnOnce`
 pub trait RecordDecorator {
     /// Format a field
-    fn fmt_msg(&self, io: &mut io::Write, f: &Fn(&mut io::Write) -> io::Result<()>) -> io::Result<()> {
+    fn fmt_msg(&self, io: &mut dyn io::Write, f: &dyn Fn(&mut dyn io::Write) -> io::Result<()>) -> io::Result<()> {
         f(io)
     }
     /// Format a key
-    fn fmt_key(&self, io: &mut io::Write, f: &Fn(&mut io::Write) -> io::Result<()>) -> io::Result<()> {
+    fn fmt_key(&self, io: &mut dyn io::Write, f: &dyn Fn(&mut dyn io::Write) -> io::Result<()>) -> io::Result<()> {
         f(io)
     }
     /// Format a separator
-    fn fmt_separator(&self, io: &mut io::Write, f: &Fn(&mut io::Write) -> io::Result<()>) -> io::Result<()> {
+    fn fmt_separator(&self, io: &mut dyn io::Write, f: &dyn Fn(&mut dyn io::Write) -> io::Result<()>) -> io::Result<()> {
         f(io)
     }
     /// Format a value
-    fn fmt_value(&self, io: &mut io::Write, f: &Fn(&mut io::Write) -> io::Result<()>) -> io::Result<()> {
+    fn fmt_value(&self, io: &mut dyn io::Write, f: &dyn Fn(&mut dyn io::Write) -> io::Result<()>) -> io::Result<()> {
         f(io)
     }
     /// Format a timestamp
-    fn fmt_timestamp(&self, io: &mut io::Write, f : &Fn(&mut io::Write) -> io::Result<()>) -> io::Result<()> {
+    fn fmt_timestamp(&self, io: &mut dyn io::Write, f : &dyn Fn(&mut dyn io::Write) -> io::Result<()>) -> io::Result<()> {
         f(io)
     }
     /// Format a level
-    fn fmt_level(&self, io: &mut io::Write, f: &Fn(&mut io::Write) -> io::Result<()>) -> io::Result<()> {
+    fn fmt_level(&self, io: &mut dyn io::Write, f: &dyn Fn(&mut dyn io::Write) -> io::Result<()>) -> io::Result<()> {
         f(io)
     }
 }
