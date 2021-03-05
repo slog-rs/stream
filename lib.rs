@@ -5,11 +5,6 @@
 //! using given `Format` and writes it to a given `io::Write`.
 #![warn(missing_docs)]
 
-#[macro_use]
-extern crate slog;
-extern crate slog_extra;
-extern crate thread_local;
-
 use slog::{Drain, DrainExt};
 
 use std::cell::RefCell;
@@ -55,12 +50,12 @@ impl<W: 'static + io::Write + Send, F: Format + Send> Drain for Streamer<W, F> {
             let mut buf = buf.borrow_mut();
             let res = {
                 || {
-                    try!(self.format.format(&mut *buf, info, logger_values));
+                    self.format.format(&mut *buf, info, logger_values)?;
                     {
-                        let mut io = try!(self.io
+                        let mut io = self.io
                             .lock()
-                            .map_err(|_| io::Error::new(io::ErrorKind::Other, "lock error")));
-                        try!(io.write_all(&buf));
+                            .map_err(|_| io::Error::new(io::ErrorKind::Other, "lock error"))?;
+                        io.write_all(&buf)?;
                     }
                     Ok(())
                 }
